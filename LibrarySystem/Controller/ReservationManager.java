@@ -32,18 +32,22 @@ public class ReservationManager {
                 break;
         }
     }
+
+    public Integer countActiveReservation(String studentId) {
+        return 0;
+    }
     
     public AssignmentAlgorithm getCurrentAlgorithm() {
         return currentAlgorithm;
     }
 
-    public Reservation createReservation(String studentId, String roomId, String seatId) {
-        if (!assignmentStrategy.canAssign(studentId, seatId)) {
+    public Reservation createReservation(String studentId, String roomId) {
+        if (!assignmentStrategy.canAssign(studentId)) {
             return null; // Or throw exception
         }
         
         String reservationId = "RES-" + System.currentTimeMillis();
-        Reservation reservation = new Reservation(reservationId, studentId, roomId, seatId);
+        Reservation reservation = new Reservation(reservationId, studentId, roomId);
         reservations.put(reservationId, reservation);
         return reservation;
     }
