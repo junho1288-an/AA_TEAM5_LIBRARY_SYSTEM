@@ -41,7 +41,10 @@ public class AuthService {
         return user != null && user instanceof Student;
     }
 
-    public boolean isLibrarian(String userId) {
+    public boolean isLibrarian(String userId, String authToken) {
+        if (!isAuthenticated(authToken)) {
+            return false;
+        }
         User user = userManager.getUser(userId);
         return user != null && user instanceof Librarian;
     }

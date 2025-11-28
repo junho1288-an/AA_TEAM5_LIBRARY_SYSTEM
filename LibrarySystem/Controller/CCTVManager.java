@@ -13,4 +13,13 @@ public class CCTVManager {
         // Return true if camera detects a person
         return false;
     }
+
+    public boolean testConnection(String cctvInfo) {
+        // Simulate connection test
+        if (cctvInfo == null || cctvInfo.isEmpty()) {
+            return false;
+        }
+        System.out.println("Testing connection to CCTV: " + cctvInfo);
+        return true; // Simulate success
+    }
 }
