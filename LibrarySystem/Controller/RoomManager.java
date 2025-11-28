@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+public class RoomManager {
     private Map<String, ReadingRoom> readingRooms;
 
     public RoomManager() {
@@ -46,5 +47,9 @@ import java.util.ArrayList;
 
     public List<ReadingRoom> getAllReadingRooms() {
         return new ArrayList<>(readingRooms.values());
+    }
+
+    public boolean hasFreeSeat() {
+        return null;
     }
 }
