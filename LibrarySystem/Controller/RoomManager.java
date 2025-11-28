@@ -49,7 +49,4 @@ public class RoomManager {
         return new ArrayList<>(readingRooms.values());
     }
 
-    public boolean hasFreeSeat() {
-        return null;
-    }
 }

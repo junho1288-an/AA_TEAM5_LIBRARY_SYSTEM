@@ -10,8 +10,12 @@ public class SeatManager {
         seat.setStatus(status);
     }
 
-    public void assignSeat(Seat seat, SeatUsage usage) {
+    public void assignSeat(Seat seat) {
         seat.assign(usage);
+    }
+
+    public boolean hasFreeSeat(String readingroomId) {
+        return null;
     }
 
     public boolean isSeatAvailable(Seat seat) {
