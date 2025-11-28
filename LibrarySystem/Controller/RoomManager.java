@@ -21,6 +21,10 @@ public class RoomManager {
         return readingRooms.get(roomId);
     }
 
+    public List<ReadingRoom> searchReadingRooms(String name, String location) {
+        return new ArrayList<>(readingRooms.values());
+    }
+
     public List<ReadingRoom> getAllReadingRooms() {
         return new ArrayList<>(readingRooms.values());
     }
