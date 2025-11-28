@@ -37,6 +37,10 @@ public class SeatUsage {
         return seatId;
     }
 
+    public String getStudentId() {
+        return studentId;
+    }
+
     public UsageStatus getStatus() {
         return status;
     }
