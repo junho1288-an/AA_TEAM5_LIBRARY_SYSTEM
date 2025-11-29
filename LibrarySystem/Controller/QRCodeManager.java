@@ -15,4 +15,16 @@ public class QRCodeManager {
         // Logic to validate QR code
         return inputQr != null && inputQr.startsWith("QR-" + seatId);
     }
+
+    // Extract seatId from QR code
+    public String extractSeatId(String qrInput) {
+        if (qrInput != null && qrInput.startsWith("QR-")) {
+            // QR format: "QR-{seatId}-{uuid}"
+            String[] parts = qrInput.split("-");
+            if (parts.length >= 2) {
+                return parts[1]; // Return seatId
+            }
+        }
+        return null;
+    }
 }
