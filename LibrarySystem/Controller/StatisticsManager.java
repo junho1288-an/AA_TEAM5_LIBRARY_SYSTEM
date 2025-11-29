@@ -174,19 +174,60 @@ public class StatisticsManager {
         return result;
     }
     
-    // UC_10: Get Seat Status Detail
-    public Map<String, String> getSeatStatusDetail(String roomId) {
+    /**
+     * UC_10: 좌석별 상세 상태 조회 (사용 중/잠시 이석/공석)
+     * 
+     * Main Success Scenario:
+     * 1. 도서관 관리자가 조회하고 싶은 열람실을 선택한다. (selectReadingRoom)
+     * 2. 도서관 관리자가 조회할 열람실의 좌석별 상세 상태를 조회한다. (getSeatStatusDetail)
+     * 3. 시스템은 선택된 열람실의 모든 좌석에 대한 최신 배정 정보, QR 착석/퇴실 정보, CCTV 인식 결과를 조회한다.
+     * 4. 시스템은 열람실의 각 좌석 상태를 표시한다.
+     * 
+     * Extension:
+     * 3.a 배정·착석 정보가 서로 상충하여 상태를 판단할 수 없는 경우
+     *  1) 시스템은 해당 좌석을 ‘UNKNOWN’ 상태로 표시한다.
+     * 
+     * @return Map<SeatId, UsageStatus> (OCCUPIED, AWAY, EMPTY, UNKNOWN)
+     * @throws IllegalStateException 열람실이 선택되지 않은 경우
+     */
+    public Map<String, Project.LibrarySystem.Model.SeatUsage.UsageStatus> getSeatStatusDetail() {
+        if (selectedRoomId == null) {
+            throw new IllegalStateException("조회할 열람실을 먼저 선택해야 합니다.");
+        }
+
         // 1. Get all seats in the room
-        // List<Seat> seats = roomManager.getReadingRoom(roomId).getSeats();
+        Project.LibrarySystem.Model.ReadingRoom room = roomManager.getReadingRoom(selectedRoomId);
+        if (room == null) return new java.util.HashMap<>();
+
+        Map<String, Project.LibrarySystem.Model.SeatUsage.UsageStatus> seatStatuses = new java.util.HashMap<>();
+        java.util.List<Project.LibrarySystem.Model.Seat> seats = room.getSeats();
+
         // 2. Iterate and check status
-        // for (Seat seat : seats) {
-        //     SeatUsage usage = seat.getCurrentUsage();
-        //     boolean isOccupied = cctvManager.isSeatOccupied(seat.getSeatId());
-        //     // Apply rules:
-        //     // if (usage != null && usage.getStatus() == OCCUPIED && isOccupied) -> USING
-        //     // if (usage != null && !isOccupied) -> AWAY
-        //     // if (usage == null && !isOccupied) -> EMPTY
-        // }
-        return null;
+        for (Project.LibrarySystem.Model.Seat seat : seats) {
+            Project.LibrarySystem.Model.SeatUsage usage = seat.getCurrentUsage();
+            boolean isOccupiedByCCTV = cctvManager.isSeatOccupied(seat.getSeatId());
+            Project.LibrarySystem.Model.SeatUsage.UsageStatus status = updateSeatStatus(usage, isOccupiedByCCTV);
+            seatStatuses.put(seat.getSeatId(), status);
+        }
+        
+        return seatStatuses;
+    }
+
+    private Project.LibrarySystem.Model.SeatUsage.UsageStatus updateSeatStatus(Project.LibrarySystem.Model.SeatUsage usage, boolean isOccupiedByCCTV) {
+        if (usage != null && (usage.getStatus() == Project.LibrarySystem.Model.SeatUsage.UsageStatus.OCCUPIED)) {
+            if (isOccupiedByCCTV) {
+                return Project.LibrarySystem.Model.SeatUsage.UsageStatus.OCCUPIED;
+            } else {
+                return Project.LibrarySystem.Model.SeatUsage.UsageStatus.AWAY;
+            }
+        } else if (usage == null || usage.getStatus() == Project.LibrarySystem.Model.SeatUsage.UsageStatus.EMPTY) {
+            if (isOccupiedByCCTV) {
+                return Project.LibrarySystem.Model.SeatUsage.UsageStatus.UNKNOWN; 
+            } else {
+                return Project.LibrarySystem.Model.SeatUsage.UsageStatus.EMPTY;
+            }
+        } else {
+            return Project.LibrarySystem.Model.SeatUsage.UsageStatus.UNKNOWN;
+        }
     }
 }
