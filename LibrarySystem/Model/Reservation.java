@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 public class Reservation {
     public enum ReservationStatus {
         WAITING,
+        PENDING,
         APPROVED,
         REJECTED,
         CANCELED,
+        NOSHOW,
         USING
     }
 
