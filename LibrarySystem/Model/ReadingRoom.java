@@ -26,6 +26,14 @@ public class ReadingRoom {
         return roomId;
     }
 
+    public ReadingRoom getBriefInfo() {
+        return null;
+    }
+
+    public ReadingRoom getDetailfInfo() {
+        return null;
+    }
+
     public String getName() {
         return name;
     }

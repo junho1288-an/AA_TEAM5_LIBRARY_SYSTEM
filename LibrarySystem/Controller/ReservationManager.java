@@ -63,6 +63,10 @@ public class ReservationManager {
         return reservations.get(reservationId);
     }
 
+    public List<Reservation> getReservationByStudentId(String studentId) {
+        return reservations.get(studentId);
+    }
+
     public Reservation findReservationByStudentId(String studentId) {
         for (Reservation reservation : reservations.values()) {
             if (reservation.getStudentId().equals(studentId)) {
