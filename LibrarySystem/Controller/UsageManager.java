@@ -13,10 +13,17 @@ import java.time.LocalDate;
 public class UsageManager {
     private Map<String, SeatUsage> activeUsages;
     private RoomManager roomManager;
+    private UserManager userManager;
 
     public UsageManager(RoomManager roomManager) {
         this.activeUsages = new HashMap<>();
         this.roomManager = roomManager;
+    }
+	
+	public UsageManager(RoomManager roomManager, UserManager userManager) {
+        this.activeUsages = new HashMap<>();
+        this.roomManager = roomManager;
+        this.userManager = userManager;
     }
 
     public SeatUsage startUsage(String reservationId, String seatId, String studentId) {
@@ -63,6 +70,13 @@ public class UsageManager {
                 }
             }
             
+            
+            // Increment usage count for student
+            Project.LibrarySystem.Model.User user = userManager.getUser(usage.getStudentId());
+            if (user instanceof Project.LibrarySystem.Model.Student) {
+                ((Project.LibrarySystem.Model.Student) user).incrementUsageCount();
+            }
+
             activeUsages.remove(usageId); // Move to history in real app
         }
     }
