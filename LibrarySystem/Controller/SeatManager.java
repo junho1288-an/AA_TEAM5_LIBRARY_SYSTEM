@@ -45,7 +45,7 @@ public class SeatManager {
             for (Seat seat : room.getSeats()) {
                 SeatUsage usage = seat.getCurrentUsage();
                 if (usage != null && studentId.equals(usage.getStudentId()) && 
-                    (usage.getStatus() == SeatUsage.UsageStatus.ASSIGNED || usage.getStatus() == SeatUsage.UsageStatus.OCCUPIED)) {
+                    (usage.getStatus() == SeatUsage.UsageStatus.OCCUPIED || usage.getStatus() == SeatUsage.UsageStatus.OCCUPIED)) {
                     
                     return String.format("Seat Status: %s\nRoom: %s\nSeat: %s\nTime Remaining: %s", 
                         usage.getStatus(), room.getName(), seat.getSeatId(), "2 hours"); // Mock time

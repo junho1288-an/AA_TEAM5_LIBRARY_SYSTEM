@@ -4,12 +4,10 @@ import java.time.LocalDateTime;
 
 public class SeatUsage {
     public enum UsageStatus {
-        ASSIGNED,
         OCCUPIED,
         AWAY,
-        EXPIRED,
         EMPTY,
-        UNDETERMINED
+        UNKNOWN
     }
 
     private String usageId;
@@ -26,7 +24,7 @@ public class SeatUsage {
         this.seatId = seatId;
         this.studentId = studentId;
         this.startTime = LocalDateTime.now();
-        this.status = UsageStatus.ASSIGNED;
+        this.status = UsageStatus.OCCUPIED;
     }
 
     public String getUsageId() {

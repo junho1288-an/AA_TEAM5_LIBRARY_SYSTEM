@@ -82,7 +82,6 @@ public class ReservationManager {
     }
 
     // Sequence Diagram Methods
-
     public void assignSeatToNextStudent(String seatId) {
         // 1. Find the room for this seat (Assuming we can get roomId from seatId or search)
         // For simplicity, we'll search all rooms to find the seat's room
@@ -163,8 +162,11 @@ public class ReservationManager {
             .orElse(null);
     }
 
+    public List<Reservation> getReservationByStudentId(String studentId) {
+        return reservations.get(studentId);
+    }
 
-	
+
     public Reservation findReservationByStudentId(String studentId) {
         for (Reservation reservation : reservations.values()) {
             if (reservation.getStudentId().equals(studentId)) {

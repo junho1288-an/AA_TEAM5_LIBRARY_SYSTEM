@@ -22,14 +22,12 @@ public class RoomManager {
         this(new CCTVManager(), new AuthService(new Project.LibrarySystem.Controller.UserManager()));
     }
 
-    public String registerReadingRoom(String adminId, String authToken, ReadingRoom room, String cctvInfo) {
-        // 0. Validate Admin
-        if (!authService.isLibrarian(adminId, authToken)) {
-            throw new SecurityException("Access Denied: Only librarians can register reading rooms.");
-        }
+    public String registerReadingRoom(ReadingRoom room, String cctvInfo) {
 
         // 1. Validate Input
-        validateRoom(room);
+        if (!validateRoomData(room)) {
+            throw new IllegalArgumentException("Invalid reading room input.");
+        }
         
         // 2. Test CCTV Connection
         if (!cctvManager.testConnection(cctvInfo)) {
@@ -40,27 +38,28 @@ public class RoomManager {
         String roomId = "ROOM_" + (readingRooms.size() + 1);
         
         // 4. Create and Store
-        ReadingRoom newRoom = new ReadingRoom(roomId, name, location, totalSeats, operatingHours);
-        readingRooms.put(roomId, newRoom);
+        ReadingRoom newRoom = new ReadingRoom(roomId, room.getName(), room.getLocation(), room.getTotalSeats(), room.getOperatingHours());
+        updateReadingRoomList(newRoom);
         
-        System.out.println("Reading Room Registered: " + name + " (ID: " + roomId + ")");
+        System.out.println("Reading Room Registered: " + newRoom.getName() + " (ID: " + roomId + ")");
         return roomId;
     }
 
-    private void validateRoom(ReadingRoom room) {
+    private boolean validateRoomData(ReadingRoom room) {
         if (room.getName() == null || room.getName().isEmpty()) {
-            throw new IllegalArgumentException("Reading room name cannot be empty.");
+            return false;
         }
         if (room.getTotalSeats() <= 0) {
-            throw new IllegalArgumentException("Total seats must be greater than 0.");
+            return false;
         }
         
         // Check for duplicates
         for (ReadingRoom existingRoom : readingRooms.values()) {
             if (existingRoom.getName().equals(room.getName())) {
-                throw new IllegalArgumentException("Reading room name already exists.");
+                return false;
             }
         }
+        return true;
     }
 
     public void updateReadingRoomList(ReadingRoom room) {
