@@ -32,8 +32,8 @@ public class AuthService {
         }
     }
 
-    public boolean isAuthenticated(String userId) {
-        return activeSessions.contains(userId);
+    public boolean isAuthenticated(String authToken) {
+        return activeSessions.contains(authToken);
     }
 
     public boolean isStudent(String userId) {
@@ -41,11 +41,11 @@ public class AuthService {
         return user != null && user instanceof Student;
     }
 
-    public boolean isLibrarian(String userId, String authToken) {
+    public boolean isLibrarian(String adminId, String authToken) {
         if (!isAuthenticated(authToken)) {
             return false;
         }
-        User user = userManager.getUser(userId);
+        User user = userManager.getUser(adminId);
         return user != null && user instanceof Librarian;
     }
     
